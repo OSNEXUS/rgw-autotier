@@ -14,24 +14,47 @@ To use the scripts effectively you'll need to setup a Ceph object storage config
 
 ## Setup
 
-To enable auto-tiering you'll first need to create a rules file at /etc/ceph/rgw_autotier.prop and this file will need to be copied to all the systems in your Ceph cluster running an CephRGW instance.  Here's an example configuration file:
+To enable auto-tiering you'll first need to create a rules file at /etc/ceph/rgw_autotier.prop and this file will need to be copied to all the systems in your Ceph cluster running an CephRGW instance.  
+
+## Auto-Tiering Rules Format
+
+Rules matching with regex PATTERN and capacity matching using an OPERATOR with a CAPACITY may be used together or separately.  When not using any given field use the asterisk '*' to denote any/all match.
+
+The format of an auto-tiering rules is one rule per line in the following format with semicolon (;) as the delimiter.
 
 ```
-# put all .pdf great then 1MiB into STANDARD storage class
-STANDARD;.pdf;>;1048576
+STORAGECLASS;PATTERN;OPERATOR;CAPACITY
+```
 
-# put all .iso images less than 1GiB into the REDUCED_REDUNDANCY storage class
-REDUCED_REDUNDANCY;.iso;>;1073741824
+### STORAGECLASS
 
-# put all .xlsx files less than 64K into STANDARD_IA
-STANDARD_IA;.xlsx;<;65536
+STORAGECLASS must be a valid storage class associated with a Ceph bucket.data pool else object PUT request will be rejected if the assigned STORAGECLASS is not valid/defined
 
+### PATTERN
+
+PATTERN can be any pattern that can be put to Lua string.find() and must exclude semicolons (;) as that is used as the line delimiter
+
+### OPERATOR
+
+The OPERATOR field is only valid if a valid CAPACITY is specified.  OPERATOR can be greater-than '>', less-than '<', equals '=', or '*' to indicate any object size
+
+### CAPACITY
+
+CAPACITY indicates the capacity in bytes to apply the OPERATOR to with the Request.ContentLength.  For example if CAPACITY is 65536 and OPERATOR is < then only PUT requests of objects with Request.ContentLength less than 65536 bytes will be a positive match.
+
+## Example Rules Configuration File (/etc/ceph/rgw_autotier.prop)
+
+```
 # put all files less than 32K into INTELLIGENT_TIERING regardless of object name
 INTELLIGENT_TIERING;*;<;32768
-
 # put all .eml files into STANDARD_IA regardless of size
 STANDARD_IA;.eml;*;*
-
+# put all .pdf great then 1MiB into STANDARD storage class
+STANDARD;.pdf;>;1048576
+# put all .iso images less than 1GiB into the REDUCED_REDUNDANCY storage class
+REDUCED_REDUNDANCY;.iso;>;1073741824
+# put all .xlsx files less than 64K into STANDARD_IA
+STANDARD_IA;.xlsx;<;65536
 ```
 
 ## Installing

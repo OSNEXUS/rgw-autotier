@@ -11,43 +11,7 @@
 --
 --
 
--- Having problems? Start here to have it log and exit to make sure this Lua script loading and running.
---   RGWDebugLog("[S3 Object Auto-tiering Script for CephRGW]")
---   if true then return end
-
 patternsFilename = "/etc/ceph/rgw_autotier.prop"
-
--- File format:
--- STORAGECLASS;PATTERN;OPERATOR;CAPACITY
--- 
--- STORAGECLASS must be a valid storage class associated with a Ceph bucket.data pool else
--- object PUT request will be rejected if the assigned STORAGECLASS is not valid/defined
---
--- PATTERN can be any pattern that can be put to Lua string.find() and should exclude semicolons (;)
---
--- OPERATOR can be greater-than '>', less-than '<', equals '=', or '*' any size
--- The OPERATOR field is only valid if a valid CAPACITY is specified
---
--- CAPACITY indicates the capacity in bytes to apply the OPERATOR to with the Request.ContentLength
--- For example if CAPACITY is 65536 and OPERATOR is < then only PUT requests of objects 
--- with Request.ContentLength less than 65536 will match.
---
--- Object name matching with PATTERN and capacity matching with OPERATOR+CAPACITY can be
--- used together or separately.  When not using any given field use the asterisk '*' to denote any/all match.
-
--- Example storage class pattern matching rules file:
-----
--- # put all files less than 32K into INTELLIGENT_TIERING regardless of object name
--- INTELLIGENT_TIERING;*;<;32768
--- # put all .eml files into STANDARD_IA regardless of size
--- STANDARD_IA;.eml;*;*
--- # put all .pdf great then 1MiB into STANDARD storage class
--- STANDARD;.pdf;>;1048576
--- # put all .iso images less than 1GiB into the REDUCED_REDUNDANCY storage class
--- REDUCED_REDUNDANCY;.iso;>;1073741824
--- # put all .xlsx files less than 64K into STANDARD_IA
--- STANDARD_IA;.xlsx;<;65536
-----
 
 local function fileExists(val)
   local fHandle = io.open(val, "r")
