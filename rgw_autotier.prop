@@ -1,0 +1,15 @@
+# put all .pdf great then 1MiB into STANDARD storage class
+STANDARD;.pdf;>;1048576
+
+# put all .iso images less than 1GiB into the REDUCED_REDUNDANCY storage class
+REDUCED_REDUNDANCY;.iso;>;1073741824
+
+# put all .xlsx files less than 64K into STANDARD_IA
+STANDARD_IA;.xlsx;<;65536
+
+# put all files less than 32K into INTELLIGENT_TIERING regardless of object name
+INTELLIGENT_TIERING;*;<;32768
+
+# put all .eml files into STANDARD_IA regardless of size
+STANDARD_IA;.eml;*;*
+
