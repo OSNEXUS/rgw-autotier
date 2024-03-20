@@ -105,8 +105,9 @@ tail -f /var/log/radosgw/client.radosgw.*.log | grep Lua
 
 This will show filtered log output like so with just log entries from the Lua auto-tiering script:
 
+```
 2024-03-20T06:47:55.945+0000 7f6afc6f8700 20 Lua INFO:   Object hello.pdf matched: storageClass 'GLACIER' patternMatch '%.pdf' operator '*' capacityThreshold '0' bucketMatch '' tenantMatch ''
 2024-03-20T06:48:10.301+0000 7f6ab0660700 20 Lua INFO:   Object world.pptx matched: storageClass 'GLACIER' patternMatch '*' operator '>=' capacityThreshold '10485760' bucketMatch '' tenantMatch ''
 2024-03-20T06:48:24.785+0000 7f6ab1662700 20 Lua INFO:   Object testing.pdf matched: storageClass 'GLACIER' patternMatch '%.pdf' operator '*' capacityThreshold '0' bucketMatch '' tenantMatch ''
-
+```
 
