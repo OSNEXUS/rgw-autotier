@@ -35,7 +35,7 @@ STORAGECLASS must be a valid storage class associated with a Ceph bucket.data po
 
 ### PATTERN
 
-PATTERN can be any pattern that can be put to Lua string.find() and must exclude semicolons (;) as that is used as the line delimiter.  This is used to match to the object name
+PATTERN is used to match the object name via regex. The pattern must be compatible with Lua's regex ( see Lua string.find() ) and must exclude semicolons (;) as that is used as our rules line delimiter.
 
 ### OPERATOR
 
@@ -47,11 +47,11 @@ CAPACITY indicates the capacity in bytes to apply the OPERATOR to with the Reque
 
 ### BUCKET
 
-The BUCKET field is used to exact match to a bucket name, leave blank or use the '*' character to indicate any bucket
+The BUCKET field is used to exact match to a bucket name (Request.Bucket.Name) , leave blank or use the '*' character to indicate any bucket
 
 ### TENANT
 
-The TENANT field is used to exact match to a tenant name, leave blank or use the '*' character to indicate any tenant
+The TENANT field is used to exact match to a tenant name (Request.Bucket.Tenant), leave blank or use the '*' character to indicate any tenant
 
 
 ## Example Rules Configuration File (/etc/ceph/rgw_autotier.prop)
