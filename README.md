@@ -1,5 +1,5 @@
 # rgw-autotier
-Lua script and tools for configuring dynamic auto-tiering of objects into different Storage Classes with Ceph RGW
+Lua script and tools for configuring dynamic auto-tiering (auto assignment) of objects into different Storage Classes (bucket data pools) via the Ceph RGW (S3 gateway)
 
 
 ## Overview
