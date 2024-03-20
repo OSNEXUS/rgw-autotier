@@ -122,7 +122,7 @@ for line in patternsFile:lines() do
     -- RGWDebugLog("Processing tokens: storageClass '" .. storageClass .. "' patternMatch '" .. patternMatch .. "' operator '" .. operator .. "' capacityThreshold '" .. capacityThreshold .. "' bucketMatch '" .. bucketMatch .. "' tenantMatch '" .. tenantMatch .. "'")
 
     -- check for match to capacity threshold
-    if operator ~= nil and capacityThreshold ~= nil then
+    if operator ~= nil and operator ~= "" and operator ~= "*" and capacityThreshold ~= nil then
       if isInteger(capacityThreshold) then
         capacity = tonumber(capacityThreshold)
         if capacity > 0 then
@@ -142,14 +142,14 @@ for line in patternsFile:lines() do
     end
 
     -- check for exact match to bucket name
-    if bucketMatch ~= nil and bucketMatch ~= "" then
+    if bucketMatch ~= nil and bucketMatch ~= "" and bucketMatch ~= "*" then
         if bucketMatch ~= Request.Bucket.Name then
             goto continue_gmatch
         end
     end
 
     -- check for exact match to tenant name
-    if tenantMatch ~= nil and tenantMatch ~= "" then
+    if tenantMatch ~= nil and tenantMatch ~= "" and tenantMatch ~= "*" then
         if tenantMatch ~= Request.Bucket.Tenant then
             goto continue_gmatch
         end
