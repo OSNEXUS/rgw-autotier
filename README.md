@@ -10,7 +10,7 @@ For example, one might have a rule that all .pdf files are stored in an erasure-
 
 ## Storage Classes
 
-To use the scripts effectively you'll need to setup a Ceph object storage configuration with at least one gateway and at least two data pools (eg. default.rgw.buckets.data & default.rgw.buckets.glacier.data).  I would recommend having a default 'STANDARD' data pool (default.rgw.buckets.data) based on a replica layout such as replica=3 and a second data pool based on an erasure-coding layout such as 4k+2m or 8k+3m, you might call this second data class 'ARCHIVE' or 'GLACIER' (default.rgw.buckets.glacier.data). You'll also need at least one CephRGW instance setup within your cluster. 
+To use the scripts effectively you'll need to setup a Ceph object storage configuration with at least one gateway and at least two data pools (eg. default.rgw.buckets.data & default.rgw.buckets.glacier.data).  We recommend having a default 'STANDARD' data pool (default.rgw.buckets.data) based on a replica layout such as replica=3 and one or more additional data pools based on an erasure-coding layout such as 4k+2m or 8k+3m, you might call this second data class 'ARCHIVE' or 'GLACIER' (default.rgw.buckets.glacier.data). You'll also need at least one CephRGW instance setup within your cluster but generally for best performance run a CephRGW instance on all cluster nodes. Last, when defining a new storage class consider naming it after one of the names that AWS S3 uses (STANDARD | REDUCED_REDUNDANCY | STANDARD_IA | ONEZONE_IA | INTELLIGENT_TIERING | GLACIER | DEEP_ARCHIVE | GLACIER_IR) as some S3 clients don't support using storage class names other than those defined by AWS. (eg. Veritas NetBackup)
 
 ## Setup
 
