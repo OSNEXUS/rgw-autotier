@@ -23,7 +23,10 @@ Rules matching with regex PATTERN and capacity matching using an OPERATOR with a
 The format of an auto-tiering rules is one rule per line in the following format with semicolon (;) as the delimiter.
 
 ```
+STORAGECLASS;PATTERN
 STORAGECLASS;PATTERN;OPERATOR;CAPACITY
+STORAGECLASS;PATTERN;OPERATOR;CAPACITY;BUCKET
+STORAGECLASS;PATTERN;OPERATOR;CAPACITY;BUCKET;TENANT
 ```
 
 ### STORAGECLASS
@@ -32,7 +35,7 @@ STORAGECLASS must be a valid storage class associated with a Ceph bucket.data po
 
 ### PATTERN
 
-PATTERN can be any pattern that can be put to Lua string.find() and must exclude semicolons (;) as that is used as the line delimiter
+PATTERN can be any pattern that can be put to Lua string.find() and must exclude semicolons (;) as that is used as the line delimiter.  This is used to match to the object name
 
 ### OPERATOR
 
@@ -42,19 +45,33 @@ The OPERATOR field is only valid if a valid CAPACITY is specified.  OPERATOR can
 
 CAPACITY indicates the capacity in bytes to apply the OPERATOR to with the Request.ContentLength.  For example if CAPACITY is 65536 and OPERATOR is < then only PUT requests of objects with Request.ContentLength less than 65536 bytes will be a positive match.
 
+### BUCKET
+
+The BUCKET field is used to exact match to a bucket name, leave blank or use the '*' character to indicate any bucket
+
+### TENANT
+
+The TENANT field is used to exact match to a tenant name, leave blank or use the '*' character to indicate any tenant
+
+
 ## Example Rules Configuration File (/etc/ceph/rgw_autotier.prop)
 
 ```
-# put all files less than 32K into INTELLIGENT_TIERING regardless of object name
+# put all objects less than 32K into INTELLIGENT_TIERING regardless of object name
 INTELLIGENT_TIERING;*;<;32768
-# put all .eml files into STANDARD_IA regardless of size
+# put all .eml objects into STANDARD_IA regardless of size
+STANDARD_IA;.eml
 STANDARD_IA;.eml;*;*
-# put all .pdf great then 1MiB into STANDARD storage class
+# put all .pdf greater then 1MiB into STANDARD storage class
 STANDARD;.pdf;>;1048576
 # put all .iso images less than 1GiB into the REDUCED_REDUNDANCY storage class
-REDUCED_REDUNDANCY;.iso;>;1073741824
-# put all .xlsx files less than 64K into STANDARD_IA
+REDUCED_REDUNDANCY;.iso;<;1073741824
+# put all .xlsx objects less than 64K into STANDARD_IA
 STANDARD_IA;.xlsx;<;65536
+# put all objects less than 64K being written to bucket bucket123 into STANDARD_IA
+STANDARD_IA;*;<=;65536;bucket123
+# put all objects less than 64K being written to tenant abcdef into STANDARD_IA
+STANDARD_IA;*;<=;65536;*;abcdef
 ```
 
 ## Installing
